@@ -1,12 +1,16 @@
-name: Finance Pulse CI
+name: Finance Pulse CI/CD
 
 on:
   push:
     branches:
       - main
 
+# Required so the action has the authority to rewrite the gh-pages branch
+permissions:
+  contents: write
+
 jobs:
-  build_and_validate:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,3 +28,13 @@ jobs:
 
       - name: Build Application
         run: npm run build
+        # Securely inject GitHub Secrets into the Vite build environment
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
