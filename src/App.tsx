@@ -5,9 +5,24 @@ import ExpenseChart from './components/ExpenseChart';
 import { useExpenses } from './hooks/useExpenses';
 
 function App() {
-  const { expenses, addExpense, deleteExpense } = useExpenses();
+  const { expenses, addExpense, deleteExpense, isLoading } = useExpenses();
 
   const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center">
+        <div className="w-full max-w-2xl flex flex-col items-center gap-6 animate-pulse">
+          <div className="h-10 w-64 bg-slate-800 rounded-lg mb-2"></div>
+          <div className="h-4 w-48 bg-slate-800 rounded-lg mb-8"></div>
+          
+          <div className="w-full h-48 bg-slate-900/50 rounded-3xl border border-slate-800"></div>
+          <div className="w-full h-64 bg-slate-900/50 rounded-2xl border border-slate-800"></div>
+          <div className="w-full h-96 bg-slate-900/50 rounded-2xl border border-slate-800"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
