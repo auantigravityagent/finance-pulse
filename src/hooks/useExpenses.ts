@@ -1,14 +1,22 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import type { Expense } from '../types';
+import { useAuth } from '../features/auth/AuthProvider';
 
 export function useExpenses() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
 
   // Fetch initial data from Supabase Postgres
   useEffect(() => {
     async function fetchExpenses() {
+      if (!user) {
+        setExpenses([]);
+        setIsLoading(false);
+        return;
+      }
+
       setIsLoading(true);
       const { data, error } = await supabase
         .from('expenses')
@@ -24,14 +32,17 @@ export function useExpenses() {
     }
 
     fetchExpenses();
-  }, []);
+  }, [user]);
 
   // Insert into Supabase
   const addExpense = async (name: string, amount: number) => {
+    if (!user) return;
+
     const newExpense = {
       name,
       amount,
       date: new Date().toLocaleDateString(),
+      user_id: user.id,
     };
 
     const { data, error } = await supabase

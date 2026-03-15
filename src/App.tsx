@@ -3,8 +3,10 @@ import AddExpenseForm from './components/AddExpenseForm';
 import ExpenseList from './components/ExpenseList';
 import ExpenseChart from './components/ExpenseChart';
 import { useExpenses } from './hooks/useExpenses';
+import Login from './features/auth/Login';
+import { useAuth, AuthProvider } from './features/auth/AuthProvider';
 
-function App() {
+function Dashboard() {
   const { expenses, addExpense, deleteExpense, isLoading } = useExpenses();
 
   const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
@@ -48,6 +50,25 @@ function App() {
       </main>
     </div>
   );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}
+
+function AppContent() {
+  const { session, loading: authLoading } = useAuth();
+
+  if (authLoading) {
+    // Prevents unauthenticated flashes while Supabase validates the local token instance
+    return <div className="min-h-screen bg-slate-950"></div>; 
+  }
+
+  return session ? <Dashboard /> : <Login />;
 }
 
 export default App;
