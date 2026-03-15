@@ -5,6 +5,7 @@ import ExpenseChart from './components/ExpenseChart';
 import { useExpenses } from './hooks/useExpenses';
 import Login from './features/auth/Login';
 import { useAuth, AuthProvider } from './features/auth/AuthProvider';
+import LogoutButton from './features/auth/LogoutButton';
 
 function Dashboard() {
   const { expenses, addExpense, deleteExpense, isLoading } = useExpenses();
@@ -28,9 +29,14 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
-      <header className="mb-8 text-center w-full max-w-2xl">
-        <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-indigo-400">Finance Pulse</h1>
-        <p className="text-slate-400 mt-2">Track your spending, ignite your savings.</p>
+      <header className="mb-8 w-full max-w-2xl flex items-start justify-between">
+        <div className="text-left">
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-indigo-400">Finance Pulse</h1>
+          <p className="text-slate-400 mt-2">Track your spending, ignite your savings.</p>
+        </div>
+        <div className="mt-1">
+          <LogoutButton />
+        </div>
       </header>
       
       <main className="w-full max-w-2xl flex flex-col gap-6">
