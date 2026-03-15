@@ -15,8 +15,8 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        // Redirection context back to our primary URL once clicked from email
-        emailRedirectTo: window.location.origin,
+        // Redirection context back to our explicit URL to preserve GitHub Pages subpaths
+        emailRedirectTo: window.location.href,
       },
     });
 
